@@ -1,0 +1,30 @@
+name: Release
+on:
+  workflow_run:
+    workflows: [Test]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - name: Create source release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          if gh release view v1.0.0 >/dev/null 2>&1; then
+            echo 'Release v1.0.0 already exists.'
+            exit 0
+          fi
+          git archive --format=tar.gz --prefix=xbox-hdd-manager-1.0.0/ HEAD > xbox-hdd-manager-1.0.0-source.tar.gz
+          sha256sum xbox-hdd-manager-1.0.0-source.tar.gz > SHA256SUMS.txt
+          gh release create v1.0.0 xbox-hdd-manager-1.0.0-source.tar.gz SHA256SUMS.txt \
+            --target "$TARGET_SHA" --title 'Xbox HDD Manager 1.0.0' --notes-file RELEASE_NOTES.md

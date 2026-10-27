@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.qcow2
+*.raw
+*.img
+*.partial
+logs/
+Mounts/
+Backups/
+images.json
+manager.lock
+build*/
