@@ -20,6 +20,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
+          CURRENT_SHA=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
+          if [[ "$TARGET_SHA" != "$CURRENT_SHA" ]]; then
+            echo 'Skipping a release for an outdated commit.'
+            exit 0
+          fi
           if gh release view v1.0.0 >/dev/null 2>&1; then
             echo 'Release v1.0.0 already exists.'
             exit 0
