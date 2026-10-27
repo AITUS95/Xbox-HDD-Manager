@@ -126,7 +126,7 @@ class ConnectionTests(unittest.TestCase):
         import stat
         def text(path):
             return 'Tgid:\t100\n' if str(path).endswith('/status') else ''
-        with patch.object(r.Path, 'read_text', autospec=True, side_effect=text), patch.object(r.os, 'stat', return_value=Mock(st_rdev=123, st_mode=stat.S_IFBLK)), patch.object(r.Path, 'glob', return_value=[Path('/proc/100/fd/3'), Path('/proc/200/fd/4')]):
+        with patch.object(r.Path, 'read_text', autospec=True, side_effect=text), patch.object(r.os, 'stat', return_value=Mock(st_rdev=123, st_mode=stat.S_IFBLK)), patch.object(r.Path, 'stat', return_value=Mock(st_rdev=123, st_mode=stat.S_IFBLK)), patch.object(r.Path, 'glob', return_value=[Path('/proc/100/fd/3'), Path('/proc/200/fd/4')]):
             self.assertTrue(r.busy('/dev/nbd3', '101'))
 
     def test_restore_failure_keeps_state(self):

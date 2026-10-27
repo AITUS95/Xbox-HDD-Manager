@@ -25,11 +25,11 @@ jobs:
             echo 'Skipping a release for an outdated commit.'
             exit 0
           fi
-          if gh release view v1.0.0 >/dev/null 2>&1; then
-            echo 'Release v1.0.0 already exists.'
+          if gh release view v1.0.1 >/dev/null 2>&1; then
+            echo 'Release v1.0.1 already exists.'
             exit 0
           fi
-          git archive --format=tar.gz --prefix=xbox-hdd-manager-1.0.0/ HEAD > xbox-hdd-manager-1.0.0-source.tar.gz
-          sha256sum xbox-hdd-manager-1.0.0-source.tar.gz > SHA256SUMS.txt
-          gh release create v1.0.0 xbox-hdd-manager-1.0.0-source.tar.gz SHA256SUMS.txt \
-            --target "$TARGET_SHA" --title 'Xbox HDD Manager 1.0.0' --notes-file RELEASE_NOTES.md
+          git archive --format=tar.gz --prefix=xbox-hdd-manager-1.0.1/ HEAD > xbox-hdd-manager-1.0.1-source.tar.gz
+          sha256sum xbox-hdd-manager-1.0.1-source.tar.gz > SHA256SUMS.txt
+          gh release create v1.0.1 xbox-hdd-manager-1.0.1-source.tar.gz SHA256SUMS.txt \
+            --target "$TARGET_SHA" --title 'Xbox HDD Manager 1.0.1' --notes-file RELEASE_NOTES.md
